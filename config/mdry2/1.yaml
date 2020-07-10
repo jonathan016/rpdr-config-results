@@ -18,13 +18,13 @@ network_recognition_initial:
       source: "./rpdr-config-results/data/in_situ_jpgs"
       indices_path: "./rpdr/val_test/recog_val_test.json"
       files_path: "./rpdr/val_test/recog_val_test_classes_files.json"
-  savefile: "./rpdr-config-results/mdry2/1_224.pth.tar"
+  savefile: "./rpdr-config-results/results/mdry2/1_224.pth.tar"
 
 network_recognition_finetune:
   start_iter: 0
   end_iter: 19200  # ([num_data * item_usage * increase_factor] / batch_size) * epochs = ([675 * 8 * 4] / 2) * 10
   resolution: 448
-  backbone_weight: "./rpdr-config-results/mdry2/1_224.pth.tar"
+  backbone_weight: "./rpdr-config-results/results/mdry2/1_224.pth.tar"
   cuda: True
   optimizer:
     lr: 0.001
@@ -39,7 +39,7 @@ network_recognition_finetune:
       source: "./rpdr-config-results/data/in_situ_jpgs"
       indices_path: "./rpdr/val_test/recog_val_test.json"
       files_path: "./rpdr/val_test/recog_val_test_classes_files.json"
-  savefile: "./rpdr-config-results/mdry2/1_448.pth.tar"
+  savefile: "./rpdr-config-results/results/mdry2/1_448.pth.tar"
 
 network_detection:
   start_iter: 0
@@ -77,7 +77,7 @@ network_detection:
       - 10
       - 0.1
       - 0.1
-  backbone_weight: "./rpdr-config-results/mdry2/1_448.pth.tar"
+  backbone_weight: "./rpdr-config-results/results/mdry2/1_448.pth.tar"
   cuda: True
   optimizer:
     lr: 0.001
@@ -92,4 +92,4 @@ network_detection:
       max_usage: 80
       min_resize: 10
       max_resize: 250
-  savefile: "./rpdr-config-results/mdry2/1.pth.tar"
+  savefile: "./rpdr-config-results/results/mdry2/1.pth.tar"
