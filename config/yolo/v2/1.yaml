@@ -1,0 +1,95 @@
+# Created on 2020-07-12 14:58:00
+
+network_recognition_initial:
+  start_iter: 0
+  end_iter: 9600  # ([item_usage * num_classes * increase_factor] / batch_size) * epochs = ([8 * 120 * 4] / 64) * 160
+  resolution: 224
+  cuda: False
+  optimizer:
+    lr: 0.001
+    momentum: 0.9
+    weight_decay: 0.0005
+  dataset:
+    source: "./rpdr-config-results/data/cropped"
+    batch_size: 64
+    item_usage: 8
+    increase_by_factor: 4
+    validation:
+      source: "./rpdr-config-results/data/in_situ_jpgs"
+      indices_path: "./rpdr/val_test/recog_val_test.json"
+      files_path: "./rpdr/val_test/recog_val_test_classes_files.json"
+  savefile: "./rpdr-config-results/results/yolo/v2/1_224.pth.tar"
+
+network_recognition_finetune:
+  start_iter: 0
+  end_iter: 600  # ([item_usage * num_classes * increase_factor] / batch_size) * epochs = ([8 * 120 * 4] / 64) * 10
+  resolution: 448
+  backbone_weight: "./rpdr-config-results/results/yolo/v2/1_224.pth.tar"
+  cuda: False
+  optimizer:
+    lr: 0.001
+    momentum: 0.9
+    weight_decay: 0.0005
+  dataset:
+    source: "./rpdr-config-results/data/cropped"
+    batch_size: 64
+    item_usage: 8
+    increase_by_factor: 4
+    validation:
+      source: "./rpdr-config-results/data/in_situ_jpgs"
+      indices_path: "./rpdr/val_test/recog_val_test.json"
+      files_path: "./rpdr/val_test/recog_val_test_classes_files.json"
+  savefile: "./rpdr-config-results/results/yolo/v2/1_448.pth.tar"
+
+network_detection:
+  start_iter: 0
+  end_iter: 13500  # ([num_data * max_usage / max_data] / batch_size) * epochs = ([675 * 80 / 10] / 64) * 160
+  anchor_boxes: # In pixels
+    large:
+      - 112
+      - 158
+      - 193
+      - 86
+      - 205
+      - 247
+    medium:
+      - 59
+      - 21
+      - 84
+      - 97
+      - 95
+      - 46
+    small:
+      - 19
+      - 37
+      - 35
+      - 57
+      - 52
+      - 78
+  decay_lr: # According to https://github.com/marvis/pytorch-yolo2 specifications; modified based on ~= ratio
+    iterations:
+      - -1
+      - 84
+      - 6733
+      - 10100
+    scales:
+      - 0.1
+      - 10
+      - 0.1
+      - 0.1
+  backbone_weight: "./rpdr-config-results/results/yolo/v2/1_448.pth.tar"
+  cuda: False
+  optimizer:
+    lr: 0.001
+    momentum: 0.9
+    weight_decay: 0.0005
+  dataset:
+    source: "./rpdr-config-results/data/cropped"
+    batch_size: 64
+    to_tensor: True
+    combined:
+      max_data: 10
+      max_usage: 80
+      min_resize: 10
+      max_resize: 250
+  savefile: "./rpdr-config-results/results/yolo/v2/1.pth.tar"
